@@ -1,0 +1,3 @@
+SELECT * FROM "positions" LIMIT 1000;
+
+SELECT * FROM "users" LIMIT 1000;
