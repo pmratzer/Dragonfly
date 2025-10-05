@@ -9,7 +9,8 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = None  # global async engine
 
-DDL = """
+#redundancy to ensure tables exist if not already created using demo reset script
+DDL = """ 
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   cash_balance NUMERIC NOT NULL DEFAULT 0
@@ -119,7 +120,7 @@ async def apply_settlement(trade: dict):
 
         # (commit happens here on success)
 
-    # Log the post-apply state so you can verify effects quickly
+    # Log the post-apply state so you can verify effects quickly (for demo purposes)
     print("[SETTLEMENT] cash_after:", {"buyer": [buy_user, buyer_cash_after],
                                        "seller": [sell_user, seller_cash_after]})
     print("[SETTLEMENT] pos_after:", {"buyer": [buy_user, symbol, buyer_pos_after],
