@@ -1,7 +1,10 @@
 # services/matching/worker.py
 import os, json, asyncio, aio_pika
 AMQP_URL = os.getenv("AMQP_URL", "amqp://user:pass@localhost:5672/")
-PRICES = {"AAPL": 100.0, "MSFT": 120.0, "GOOG": 90.0}
+PRICES = {
+    "AAPL": 225.00, "MSFT": 415.00, "GOOG": 168.00, "AMZN": 185.00, "META": 510.00,
+    "NVDA": 115.00, "TSLA": 205.00, "NFLX": 620.00, "AVGO": 1720.00, "AMD": 155.00,
+}
 
 
 async def main():

@@ -11,15 +11,16 @@ DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://app:app@localhost
 PRICE_PER_SHARE = 100.0  # keep aligned with Matching for now
 engine = create_async_engine(DATABASE_URL, echo=False, future=True)
 
-PRICES = {"AAPL": 100.0, "MSFT": 120.0, "GOOG": 90.0}
+PRICES = {
+    "AAPL": 225.00, "MSFT": 415.00, "GOOG": 168.00, "AMZN": 185.00, "META": 510.00,
+    "NVDA": 115.00, "TSLA": 205.00, "NFLX": 620.00, "AVGO": 1720.00, "AMD": 155.00,
+}
 ALLOWED = set(PRICES.keys())
 
 def basic_validate_shape(o: dict) -> tuple[bool,str]:
     if o.get("type") != "order.v1": return False, "bad_type"
-    sym = o.get("symbol", "").upper()
-    if sym not in ALLOWED: return False, "symbol_not_allowed"
-    side = o.get("side", "").upper()
-    if side not in {"BUY","SELL"}: return False, "bad_side"
+    if o.get("symbol") not in {"AAPL","MSFT","GOOG","AMZN","META","NVDA","TSLA","NFLX","AVGO","AMD"}: return False, "symbol_not_allowed"
+    if o.get("side") not in {"BUY","SELL"}: return False, "bad_side"
     qty = o.get("qty")
     if not isinstance(qty,int) or not (1 <= qty <= 100): return False, "bad_qty"
     return True, "ok"
@@ -38,14 +39,6 @@ async def fetch_pos(uid: str, symbol: str) -> int:
         )
         row = res.first()
         return int(row[0]) if row else 0
-
-def basic_validate_shape(o: dict) -> tuple[bool,str]:
-    if o.get("type") != "order.v1": return False, "bad_type"
-    if o.get("symbol") not in {"AAPL","MSFT"}: return False, "symbol_not_allowed"
-    if o.get("side") not in {"BUY","SELL"}: return False, "bad_side"
-    qty = o.get("qty")
-    if not isinstance(qty,int) or not (1 <= qty <= 100): return False, "bad_qty"
-    return True, "ok"
 
 async def main():
     conn = await aio_pika.connect_robust(AMQP_URL)
